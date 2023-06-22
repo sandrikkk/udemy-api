@@ -14,7 +14,7 @@
       ports:
         - '8000:8000'
       volumes:
-        - /home/user/PycharmProjects/udemy:/app
+        -./:/app
       depends_on:
         - postgres
       env_file:

@@ -54,7 +54,7 @@ INSTALLED_APPS = [
                  ] + MY_APPS + THIRD_PARTY_APPS
 
 REST_FRAMEWORK = {
-    'PAGE_SIZE': 3,
+    # 'PAGE_SIZE': 3,
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
