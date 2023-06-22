@@ -14,3 +14,6 @@ repos:
     hooks:
       - id: black
         language_version: python3.10
+
+# isort
+# flake8
