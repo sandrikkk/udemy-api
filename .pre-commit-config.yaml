@@ -33,6 +33,3 @@ repos:
     hooks:
       - id: isort
         name: isort (python)
-
-# isort
-# flake8
