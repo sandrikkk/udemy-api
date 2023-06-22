@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.views import APIView
 from apps.products.models import Product
+from apps.products.paginations import CustomLimitOffsetPagination
 from apps.products.permissions import CustomPermission
 from apps.products.serializer import ProductSerializer
 from rest_framework.response import Response
@@ -10,11 +11,14 @@ from rest_framework.response import Response
 class ProductList(APIView):
     queryset = Product.objects.all()
     permission_classes = [CustomPermission]
+    pagination_class = CustomLimitOffsetPagination
 
     def get(self, request):
         products = self.queryset.all()
-        serializer = ProductSerializer(products, many=True)
-        return Response(serializer.data)
+        paginator = self.pagination_class()
+        paginated_products = paginator.paginate_queryset(products, request)
+        serializer = ProductSerializer(paginated_products, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
     def post(self, request):
         serializer = ProductSerializer(data=request.data)
