@@ -1,7 +1,7 @@
   version: "3.8"
   services:
     postgres:
-      image: 'postgres'
+      image: 'postgres:14.3'
       volumes:
         - pgdata:/var/lib/postgresql/data
       env_file:
@@ -14,7 +14,7 @@
       ports:
         - '8000:8000'
       volumes:
-        -./:/app
+        - ./:/app
       depends_on:
         - postgres
       env_file:
