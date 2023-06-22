@@ -1,8 +1,6 @@
 from rest_framework import serializers, status
-from rest_framework.response import Response
-
 from apps.reviews.models import Review
-from apps.orders.models import Order
+from apps.orders.models import Order, STATUS
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -15,7 +13,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         product = attrs.get('product')
 
         user = request.user
-        order = Order.objects.filter(user=user, product_id=product.id, status='SUCCEED').first()
+        order = Order.objects.filter(user=user, product_id=product.id, status=STATUS[0][0]).first()
 
         if not order:
             raise serializers.ValidationError("You haven't purchased the associated product.")
