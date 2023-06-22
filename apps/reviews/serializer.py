@@ -1,4 +1,4 @@
-from rest_framework import serializers, status
+from rest_framework import serializers
 from apps.reviews.models import Review
 from apps.orders.models import Order, STATUS
 
