@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -21,10 +22,10 @@ class Reviews(APIView):
                 IsAuthenticated(),
             ]
 
-    def get(self, request, product_slug):
-        product = Product.objects.filter(slug=product_slug).first()
-        if not product:
-            return Response({"detail": "Product not Found"})
+    def get(self, request, category_slug, product_slug):
+        product = get_object_or_404(
+            Product, category__slug=category_slug, slug=product_slug
+        )
         reviews = product.reviews.all()
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data)

@@ -6,7 +6,7 @@ from apps.orders.models import STATUS, Order
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = "__all__"
+        fields = ["user", "product", "user", "status", "created_at", "updated_at"]
 
     def validate(self, attrs):
         attrs = super().validate(attrs)
@@ -16,7 +16,7 @@ class OrderSerializer(serializers.ModelSerializer):
             user=user, product=product, status=STATUS[0][0]
         ).exists():
             raise serializers.ValidationError(
-                "You have already made a free order for this product."
+                "You have already made a order for this product."
             )
 
         return attrs
