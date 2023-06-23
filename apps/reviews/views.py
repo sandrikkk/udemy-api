@@ -29,7 +29,7 @@ class Reviews(APIView):
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data)
 
-    def post(self, request):
+    def post(self, request, product_slug):
         data = request.data
         serializer = ReviewSerializer(
             data=data, context={"request": request, "view": self}
