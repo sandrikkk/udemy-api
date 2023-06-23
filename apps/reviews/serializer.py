@@ -10,8 +10,11 @@ class ProductDefault:
 
     def __call__(self, serializer_field):
         product_slug = serializer_field.context["view"].kwargs["product_slug"]
+        category_slug = serializer_field.context["view"].kwargs["category_slug"]
         try:
-            return Product.objects.get(slug=product_slug)
+            return Product.objects.filter(
+                category__slug=category_slug, slug=product_slug
+            ).first()
         except Product.DoesNotExist:
             raise serializers.ValidationError("Product not found.")
 
