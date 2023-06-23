@@ -20,10 +20,8 @@ repos:
       -   id: flake8
           additional_dependencies: [
               'flake8-blind-except',
-              'flake8-docstrings',
               'flake8-bugbear',
               'flake8-comprehensions',
-              'flake8-docstrings',
               'flake8-implicit-str-concat',
               'pydocstyle>=5.0.0',
           ]
