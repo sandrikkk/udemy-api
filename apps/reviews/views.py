@@ -22,15 +22,15 @@ class Reviews(APIView):
                 IsAuthenticated(),
             ]
 
-    def get(self, request, category_slug, product_slug):
+    def get(self, request, pk):
         product = get_object_or_404(
-            Product, category__slug=category_slug, slug=product_slug
+            Product, id=pk
         )
         reviews = product.reviews.all()
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data)
 
-    def post(self, request, category_slug, product_slug):
+    def post(self, request, pk):
         # This method handles the HTTP POST request.
         # However, it does not use the `category_slug` and `product_slug` parameters here it uses in review serializer.
         data = request.data
