@@ -1,12 +1,16 @@
 from rest_framework import serializers
 
+from apps.base.defaults import ProductDefault
 from apps.orders.models import STATUS, Order
 
 
 class OrderSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    product = serializers.HiddenField(default=ProductDefault())
+
     class Meta:
         model = Order
-        fields = ["user", "product", "user", "status", "created_at", "updated_at"]
+        fields = ["user", "product", "status", "created_at", "updated_at"]
 
     def validate(self, attrs):
         attrs = super().validate(attrs)

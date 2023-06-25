@@ -1,18 +1,8 @@
 from rest_framework import serializers
 
+from apps.base.defaults import ProductDefault
 from apps.orders.models import STATUS, Order
-from apps.products.models import Product
 from apps.reviews.models import Review
-
-
-class ProductDefault:
-    requires_context = True
-
-    def __call__(self, serializer_field):
-        pk = serializer_field.context["view"].kwargs["pk"]
-        return Product.objects.filter(
-            id=pk
-        ).first()
 
 
 class ReviewSerializer(serializers.ModelSerializer):

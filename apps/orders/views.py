@@ -3,14 +3,18 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.orders.serializers import OrderSerializer
+from apps.orders.serializers import STATUS, OrderSerializer
 
 
-class Order(APIView):
+class OrderView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
-        serializer = OrderSerializer(data=request.data, context={"request": request})
+    def post(self, request, pk):
+        data = request.data
+        data["status"] = STATUS[0][0]
+        serializer = OrderSerializer(
+            data=request.data, context={"request": request, "view": self}
+        )
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
