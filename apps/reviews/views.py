@@ -31,8 +31,6 @@ class Reviews(APIView):
         return Response(serializer.data)
 
     def post(self, request, pk):
-        # This method handles the HTTP POST request.
-        # However, it does not use the `category_slug` and `product_slug` parameters here it uses in review serializer.
         data = request.data
         serializer = ReviewSerializer(
             data=data, context={"request": request, "view": self}

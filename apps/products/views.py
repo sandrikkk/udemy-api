@@ -32,20 +32,20 @@ class ProductDetail(APIView):
     queryset = Product.objects.all()
     permission_classes = [CustomPermission]
 
-    def get(self, request, category_slug, product_slug):
-        single_product = get_object_or_404(Product, category__slug=category_slug, slug=product_slug)
+    def get(self, request, pk):
+        single_product = get_object_or_404(Product, id=pk)
         serializer = ProductSerializer(single_product, many=False)
         return Response(serializer.data)
 
-    def put(self, request, product_slug):
-        single_product = get_object_or_404(Product, slug=product_slug)
+    def put(self, request, pk):
+        single_product = get_object_or_404(Product, id=pk)
         serializer = ProductSerializer(single_product,
                                        data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({"message": "Object has been updated"})
 
-    def delete(self, request, product_slug):
-        single_product = get_object_or_404(Product, slug=product_slug)
+    def delete(self, request, pk):
+        single_product = get_object_or_404(Product, id=pk)
         single_product.delete()
         return Response({"message": "Object has been deleted"}, status=status.HTTP_204_NO_CONTENT)
