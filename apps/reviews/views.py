@@ -23,9 +23,7 @@ class Reviews(APIView):
             ]
 
     def get(self, request, pk):
-        product = get_object_or_404(
-            Product, id=pk
-        )
+        product = get_object_or_404(Product, id=pk)
         reviews = product.reviews.all()
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data)
@@ -33,7 +31,7 @@ class Reviews(APIView):
     def post(self, request, pk):
         data = request.data
         serializer = ReviewSerializer(
-            data=data, context={"request": request, "view": self}
+            data=data, context={"request": request.user, "view": self}
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
