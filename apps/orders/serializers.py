@@ -7,6 +7,7 @@ from apps.orders.models import Order
 class OrderSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     product = serializers.HiddenField(default=ProductDefault())
+    status = serializers.HiddenField(default=Order.STATUS[0][1])
 
     class Meta:
         model = Order
