@@ -7,6 +7,6 @@ urlpatterns = [
     path("products/", include("apps.products.urls")),
     path("user/", include("apps.users.urls")),
     path("products/", include("apps.reviews.urls")),
-    path("categories/", include("apps.category.urls")),
+    # path("categories/", include("apps.category.urls")),
     path("products/", include("apps.orders.urls")),
 ]

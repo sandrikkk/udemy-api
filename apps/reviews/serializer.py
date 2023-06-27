@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from apps.base.defaults import ProductDefault
-from apps.orders.models import Order
+from apps.orders.models import Order, Status
 from apps.reviews.models import Review
 
 
@@ -18,7 +18,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         product = attrs.get("product")
         user = self.context.get("user")
         order = Order.objects.filter(
-            user=user, product_id=product.id, status=Order.STATUS[0][0]
+            user=user, product_id=product.id, status=Status.SUCCEED
         ).first()
         if not order:
             raise serializers.ValidationError(

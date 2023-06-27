@@ -1,13 +1,13 @@
 from rest_framework import serializers
 
 from apps.base.defaults import ProductDefault
-from apps.orders.models import Order
+from apps.orders.models import Order, Status
 
 
 class OrderSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     product = serializers.HiddenField(default=ProductDefault())
-    status = serializers.HiddenField(default=Order.STATUS[0][1])
+    status = serializers.HiddenField(default=Status.CANCELLED)
 
     class Meta:
         model = Order
@@ -17,9 +17,9 @@ class OrderSerializer(serializers.ModelSerializer):
         attrs = super().validate(attrs)
         user = self.context["request"].user
         product = attrs.get("product")
-        attrs["status"] = Order.STATUS[0][0]
+        attrs["status"] = Status.SUCCEED
         if Order.objects.filter(
-            user=user, product=product, status=Order.STATUS[0][0]
+            user=user, product=product, status=Status.SUCCEED
         ).exists():
             raise serializers.ValidationError(
                 "You have already made a order for this product."

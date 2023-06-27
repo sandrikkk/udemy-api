@@ -10,8 +10,9 @@ class OrderView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
+        pk = self.kwargs["pk"]
         serializer = OrderSerializer(
-            data=request.data, context={"request": request, "view": self}
+            data=request.data, context={"request": request, "pk": pk}
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
