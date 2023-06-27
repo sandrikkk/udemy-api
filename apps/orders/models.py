@@ -14,7 +14,7 @@ class Status(ChoiceEnum):
 class Order(BaseModelClass):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    status = EnumChoiceField(Status, max_length=20)
+    status = EnumChoiceField(Status, default=Status.CANCELLED, max_length=20)
 
     def __str__(self):
         return f"{self.user}, {self.product}"

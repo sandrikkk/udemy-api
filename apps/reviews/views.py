@@ -29,9 +29,10 @@ class Reviews(APIView):
         return Response(serializer.data)
 
     def post(self, request, pk):
-        data = request.data
+        pk = self.kwargs["pk"]
         serializer = ReviewSerializer(
-            data=data, context={"request": request.user, "view": self}
+            data=request.data,
+            context={"request": request, "pk": pk, "user": request.user},
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
