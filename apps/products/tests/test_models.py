@@ -45,3 +45,8 @@ class ProductModelTest(TestCase):
         category_field = product._meta.get_field("category")
         on_delete = category_field.remote_field.on_delete
         self.assertEqual(on_delete, models.DO_NOTHING)
+
+    def test_price_label(self):
+        product = Product.objects.get(id=1)
+        max_digits = product._meta.get_field("price").max_digits
+        self.assertEqual(max_digits, 6)
