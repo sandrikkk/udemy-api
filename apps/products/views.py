@@ -9,7 +9,7 @@ from apps.products.permissions import CustomPermission
 from apps.products.serializers import ProductSerializer
 
 
-class ProductList(APIView):
+class ProductListApiView(APIView):
     queryset = Product.objects.all()
     permission_classes = [CustomPermission]
     pagination_class = CustomLimitOffsetPagination
@@ -35,7 +35,7 @@ class ProductList(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class ProductDetail(APIView):
+class ProductDetailApiView(APIView):
     queryset = Product.objects.all()
     permission_classes = [CustomPermission]
 

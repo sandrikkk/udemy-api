@@ -5,7 +5,7 @@ from apps.category.models import Category
 
 
 class Product(BaseModelClass):
-    product = models.CharField(max_length=256, unique=True, null=True)
+    name = models.CharField(max_length=256, unique=True, null=True)
     category = models.ForeignKey(
         Category, on_delete=models.DO_NOTHING, related_name="products", null=True
     )
@@ -16,4 +16,4 @@ class Product(BaseModelClass):
     images = models.ImageField(upload_to="uploads/", blank=True, null=True)
 
     def __str__(self):
-        return self.product
+        return self.name
