@@ -6,6 +6,6 @@ urlpatterns = [
     path(
         "<int:pk>/reviews",
         views.Reviews.as_view(),
-        name="Reviews",
+        name="reviews",
     )
 ]
