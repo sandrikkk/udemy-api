@@ -20,7 +20,6 @@ class ProductCreationTestCase(TestCase):
         response = self.client.post(self.url, data)
         self.assertEqual(Product.objects.count(), 1)
         response_data = response.data
-        print(response_data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertListEqual(
             list(response_data.keys()),
