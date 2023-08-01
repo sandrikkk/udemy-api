@@ -25,3 +25,9 @@ class OrderSerializer(serializers.ModelSerializer):
                 "You have already made a order for this product."
             )
         return attrs
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data["user"] = self.context["request"].user.id
+        data["product"] = instance.product.name
+        return data

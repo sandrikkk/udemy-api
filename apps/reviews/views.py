@@ -1,5 +1,7 @@
 from django.shortcuts import get_object_or_404
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
+from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -37,3 +39,27 @@ class Reviews(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    
+# class OrderAPIView(CreateAPIView):
+#     serializer_class = ReviewSerializer
+#     queryset = Product.objects.all()
+#     permission_classes = [
+#         IsAuthenticated,
+#     ]
+# 
+#     def get_permissions(self):
+#         if self.request.method == "GET":
+#             return [
+#                 OrderPermission(),
+#             ]
+#         else:
+#             return [
+#                 IsAuthenticated(),
+#             ]
+# 
+#     def get_serializer_context(self):
+#         context = super().get_serializer_context()
+#         context["pk"] = self.kwargs.get("pk")
+#         context['user']
+#         return context

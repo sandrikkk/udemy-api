@@ -30,6 +30,7 @@ MY_APPS = [
 THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
+    "drf_spectacular",
 ]
 
 INSTALLED_APPS = (
@@ -52,6 +53,11 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Django DRF udemy api",  # shorthand to use the sidecar instead
+    # OTHER SETTINGS
 }
 
 MIDDLEWARE = [
