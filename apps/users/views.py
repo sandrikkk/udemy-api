@@ -1,13 +1,12 @@
-from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework.views import APIView
-from rest_framework.response import Response
+
 from apps.users.models import User
 from apps.users.serializer import UserSerializer
-from udemy.openapi_responses import register_view_post_responses
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
