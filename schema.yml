@@ -359,7 +359,11 @@ paths:
       - tokenAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+          description: ''
     post:
       operationId: products_reviews_create
       parameters:
@@ -370,13 +374,29 @@ paths:
         required: true
       tags:
       - products
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Review'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Review'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Review'
+        required: true
       security:
       - jwtAuth: []
       - cookieAuth: []
       - tokenAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+          description: ''
   /user/api/token/refresh/:
     post:
       operationId: user_api_token_refresh_create
@@ -442,12 +462,28 @@ paths:
       - tokenAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
   /user/registration/:
     post:
       operationId: user_registration_create
       tags:
       - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
       security:
       - jwtAuth: []
       - cookieAuth: []
@@ -455,7 +491,11 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
 components:
   schemas:
     MyTokenObtainPair:
@@ -577,6 +617,33 @@ components:
       - id
       - price
       - updated_at
+    Review:
+      type: object
+      properties:
+        comment:
+          type: string
+        star:
+          allOf:
+          - $ref: '#/components/schemas/StarEnum'
+          minimum: -2147483648
+          maximum: 2147483647
+      required:
+      - comment
+      - star
+    StarEnum:
+      enum:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      type: integer
+      description: |-
+        * `1` - 1
+        * `2` - 2
+        * `3` - 3
+        * `4` - 4
+        * `5` - 5
     TokenRefresh:
       type: object
       properties:
@@ -589,6 +656,42 @@ components:
       required:
       - access
       - refresh
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          maxLength: 255
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        name:
+          type: string
+          maxLength: 255
+        isAdmin:
+          type: boolean
+          title: Staff status
+          description: Designates whether the user can log into this admin site.
+          readOnly: true
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 255
+        password_confirm:
+          type: string
+          writeOnly: true
+      required:
+      - email
+      - id
+      - isAdmin
+      - name
+      - password
+      - password_confirm
+      - username
   securitySchemes:
     cookieAuth:
       type: apiKey
