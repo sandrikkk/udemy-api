@@ -17,7 +17,14 @@ class RegisterViewTestCase(APITestCase):
             "password": "123",
             "password_confirm": "123",
         }
-        self.response_keys = ["id", "username", "email", "name", "isAdmin"]
+        self.response_keys = [
+            "id",
+            "username",
+            "email",
+            "name",
+            "isAdmin",
+            "is_verified",
+        ]
 
     def test_user_registration(self):
         response = self.client.post(self.url, self.request_data)
@@ -25,14 +32,17 @@ class RegisterViewTestCase(APITestCase):
         print(response_data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertListEqual(
-            list(response_data.keys()), ["id", "username", "email", "name", "isAdmin"]
+            list(response_data.keys()),
+            ["id", "username", "email", "name", "isAdmin", "is_verified"],
         )
         self.assertEqual(response_data.get("email"), self.request_data.get("email"))
         self.assertEqual(
             response_data.get("username"), self.request_data.get("username")
         )
         self.assertEqual(response_data.get("name"), self.request_data.get("name"))
-        self.assertEqual(response_data.get("name"), self.request_data.get("name"))
+        self.assertEqual(
+            response_data.get("is_verified"), User.objects.last().is_verified
+        )
         self.assertEqual(response_data.get("id"), User.objects.last().id)
 
     def test_user_registration_without_data(self):

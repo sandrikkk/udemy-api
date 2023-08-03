@@ -16,6 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
             "email",
             "name",
             "isAdmin",
+            "is_verified",
             "password",
             "password_confirm",
         ]
