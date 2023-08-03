@@ -7,9 +7,9 @@ from apps.users import views
 from apps.users.views import LoginUser
 
 urlpatterns = [
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('registration/', views.RegisterUser.as_view(), name='registration'),
-    path('login/', LoginUser.as_view(), name='login'),
-    path('profile/', views.GetUserProfile.as_view())
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("registration/", views.RegisterUser.as_view(), name="registration"),
+    path("verify/", views.VerifyOTP.as_view(), name="verify-user"),
+    path("login/", LoginUser.as_view(), name="login"),
+    path("profile/", views.GetUserProfile.as_view()),
 ]
-

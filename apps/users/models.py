@@ -10,6 +10,7 @@ class User(AbstractUser, BaseModelClass):
     password = models.CharField(max_length=255)
     username = models.CharField(max_length=255, unique=True)
     is_verified = models.BooleanField(default=False)
+    otp = models.CharField(max_length=6, blank=True, null=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
