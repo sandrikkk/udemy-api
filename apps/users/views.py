@@ -39,34 +39,15 @@ class VerifyOTP(APIView):
     def post(self, request):
         data = request.data
         serializer = self.serializer_class(data=data)
-        if serializer.is_valid():
-            email = serializer.data["email"]
-            otp = serializer.data["otp"]
+        serializer.is_valid(raise_exception=True)
 
-            user = User.objects.filter(email=email).first()
-            if not user:
-                return Response(
-                    {"message": "Invalid email provided."},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-            if user.otp != otp:
-                return Response(
-                    {"message": "Invalid OTP provided."},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
+        email = serializer.data["email"]
+        user = User.objects.filter(email=email).first()
 
-            user.is_verified = True
-            user.save()
+        user.is_verified = True
+        user.save()
 
-            return Response(
-                {
-                    "status": status.HTTP_200_OK,
-                    "message": "Account verified.",
-                    "data": serializer.data,
-                }
-            )
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class GetUserProfile(APIView):

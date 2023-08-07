@@ -38,3 +38,14 @@ class UserSerializer(serializers.ModelSerializer):
 class VerifyAccountSerializer(serializers.Serializer):
     email = serializers.EmailField()
     otp = serializers.CharField()
+
+    def validate_email(self, email):
+        if not User.objects.filter(email=email).exist():
+            raise serializers.ValidationError("User not found")
+        return email
+
+    def validate_otp(self, otp, email):
+        user = User.objects.filter(email=email).first()
+        if user.otp != otp:
+            raise serializers.ValidationError("Invalid OTP provided.")
+        return otp
