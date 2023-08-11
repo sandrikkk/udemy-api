@@ -29,10 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        validated_data.pop("password")
-        user = User.objects.create_user(**validated_data)
-
-        return user
+        return User.objects.create_user(**validated_data)
 
 
 class VerifyAccountSerializer(serializers.Serializer):
