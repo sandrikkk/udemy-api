@@ -8,7 +8,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from apps.users.models import User
 from apps.users.serializer import UserSerializer, VerifyAccountSerializer
 
-from apps.users.emails import send_otp_email
+from apps.users.tasks import send_otp_email
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -28,7 +28,8 @@ class RegisterUser(APIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            send_otp_email(serializer.data["email"])
+            email = serializer.data["email"]
+            send_otp_email.delay(email)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
