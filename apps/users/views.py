@@ -11,12 +11,8 @@ from apps.users.serializer import UserSerializer, VerifyAccountSerializer
 from apps.users.tasks import send_otp_email
 
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    pass
-
-
 class LoginUser(TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer
+    serializer_class = TokenObtainPairSerializer
 
 
 class RegisterUser(APIView):
