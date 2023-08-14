@@ -22,29 +22,49 @@ class RegisterUser(APIView):
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            email = serializer.data["email"]
-            send_otp_email.delay(email)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
+        self._create_user(serializer)
+        self._send_otp_email(serializer)
+        return self._response(serializer.data, status.HTTP_201_CREATED)
+
+    def _create_user(self, serializer):
+        serializer.save()
+
+    def _send_otp_email(self, serializer):
+        email = serializer.data["email"]
+        send_otp_email.delay(email)
+
+    def _response(self, data, status_code):
+        return Response(data, status=status_code)
 
 
 class VerifyOTP(APIView):
     serializer_class = VerifyAccountSerializer
 
     def post(self, request):
-        data = request.data
-        serializer = self.serializer_class(data=data)
+        serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         email = serializer.data["email"]
-        user = User.objects.filter(email=email).first()
+        user = self._get_user(email)
 
+        if user:
+            self._verify_user(user)
+            return self._response(serializer.data, status.HTTP_200_OK)
+        else:
+            return self._response(
+                {"detail": "User not found"}, status.HTTP_404_NOT_FOUND
+            )
+
+    def _get_user(self, email):
+        return User.objects.filter(email=email).first()
+
+    def _verify_user(self, user):
         user.is_verified = True
         user.save()
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    def _response(self, data, status_code):
+        return Response(data, status=status_code)
 
 
 class GetUserProfile(APIView):
