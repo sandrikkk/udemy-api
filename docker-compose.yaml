@@ -42,6 +42,7 @@
         - ./:/app
       depends_on:
         - postgres
+        - redis
       env_file:
         - .env
   volumes:
