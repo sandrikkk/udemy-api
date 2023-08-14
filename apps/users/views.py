@@ -39,32 +39,26 @@ class RegisterUser(APIView):
 
 
 class VerifyOTP(APIView):
+    permissions = [IsAuthenticated]
     serializer_class = VerifyAccountSerializer
 
     def post(self, request):
-        serializer = self.serializer_class(data=request.data)
+        data = request.data
+        serializer = self.serializer_class(data=data)
         serializer.is_valid(raise_exception=True)
 
         email = serializer.data["email"]
-        user = self._get_user(email)
+        user = User.objects.filter(email=email).first()
 
-        if user:
-            self._verify_user(user)
-            return self._response(serializer.data, status.HTTP_200_OK)
-        else:
-            return self._response(
-                {"detail": "User not found"}, status.HTTP_404_NOT_FOUND
-            )
-
-    def _get_user(self, email):
-        return User.objects.filter(email=email).first()
-
-    def _verify_user(self, user):
         user.is_verified = True
         user.save()
 
-    def _response(self, data, status_code):
-        return Response(data, status=status_code)
+        return Response(
+            data={
+                "message": "you have successfully completed the verification process"
+            },
+            status=status.HTTP_200_OK,
+        )
 
 
 class GetUserProfile(APIView):
