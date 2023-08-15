@@ -1,5 +1,29 @@
   version: "3.8"
   services:
+
+    redis:
+      image: redis:7.0.12
+      container_name: udemy-redis
+      ports:
+        - "6379:6379"
+
+    celery:
+      build:
+        context: .
+        dockerfile: Dockerfile
+      restart: always
+      entrypoint: ""
+      command: celery -A udemy worker -l DEBUG
+      volumes:
+        - ./:/app
+      container_name: celery
+      depends_on:
+        - postgres
+        - backend
+        - redis
+      env_file:
+        - .env
+
     postgres:
       image: 'postgres:14.3'
       volumes:
@@ -18,6 +42,7 @@
         - ./:/app
       depends_on:
         - postgres
+        - redis
       env_file:
         - .env
   volumes:

@@ -149,6 +149,23 @@ paths:
                 type: object
                 additionalProperties: {}
           description: ''
+  /categories/:
+    get:
+      operationId: categories_retrieve
+      tags:
+      - categories
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
   /products/:
     get:
       operationId: products_list
@@ -496,8 +513,58 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
           description: ''
+  /user/verify/:
+    post:
+      operationId: user_verify_create
+      tags:
+      - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyAccount'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VerifyAccount'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VerifyAccount'
+        required: true
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyAccount'
+          description: ''
 components:
   schemas:
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        description:
+          type: string
+          maxLength: 255
+        children:
+          type: array
+          items:
+            type: integer
+      required:
+      - children
+      - description
+      - id
+      - name
     MyTokenObtainPair:
       type: object
       properties:
@@ -677,6 +744,8 @@ components:
           title: Staff status
           description: Designates whether the user can log into this admin site.
           readOnly: true
+        is_verified:
+          type: boolean
         password:
           type: string
           writeOnly: true
@@ -692,6 +761,17 @@ components:
       - password
       - password_confirm
       - username
+    VerifyAccount:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        otp:
+          type: string
+      required:
+      - email
+      - otp
   securitySchemes:
     cookieAuth:
       type: apiKey
