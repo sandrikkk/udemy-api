@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from apps.base.defaults import ProductDefault
 from apps.orders.models import Order, Status
+from apps.orders.tasks import send_order_completion_email
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -24,6 +25,9 @@ class OrderSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "You have already made a order for this product."
             )
+        user_email = user.email
+        send_order_completion_email.delay(user_email)
+
         return attrs
 
     def to_representation(self, instance):
