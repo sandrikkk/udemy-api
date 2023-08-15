@@ -1,13 +1,20 @@
+from django.contrib.auth.hashers import make_password
 from django.test import TestCase
 from rest_framework import status
 
 from apps.category.models import Category
 from apps.products.models import Product
+from apps.users.models import User
 
 
 class ProductCreationTestCase(TestCase):
     def setUp(self):
         self.url = "/products/"
+
+        self.user = User.objects.create(
+            email="test1234@gmail.com", password=make_password("test1234")
+        )
+        self.client.login(email="test1234@gmail.com", password="test1234")
 
     def test_product_creation(self):
         category = Category.objects.create(name="history")
@@ -17,6 +24,7 @@ class ProductCreationTestCase(TestCase):
             "price": "25.00",
             "category": category.id,
         }
+
         response = self.client.post(self.url, data)
         self.assertEqual(Product.objects.count(), 1)
         response_data = response.data
@@ -39,6 +47,10 @@ class ProductCreationTestCase(TestCase):
 
 class ProductRetrievalTestCase(TestCase):
     def setUp(self):
+        self.user = User.objects.create(
+            email="test1234@gmail.com", password=make_password("test1234")
+        )
+        self.client.login(email="test1234@gmail.com", password="test1234")
         self.category = Category.objects.create(name="Electronics")
 
         self.product1 = Product.objects.create(

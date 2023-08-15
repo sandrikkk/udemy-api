@@ -3,12 +3,12 @@ from rest_framework.views import APIView
 
 from apps.category.models import Category
 from apps.category.serializers import CategorySerializer
-from apps.products import permissions
+from rest_framework.permissions import AllowAny
 
 
 class CategoryApiView(APIView):
     queryset = Category.objects.all()
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [AllowAny]
     serializer_class = CategorySerializer
 
     def get(self, request):

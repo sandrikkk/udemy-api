@@ -1,10 +1,9 @@
-from rest_framework.permissions import AllowAny, IsAuthenticated, BasePermission
+from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 
 class CustomPermission(BasePermission):
-    def get_permissions(self):
-        if self == 'GET':
-            return [AllowAny()]
+    def has_permission(self, request, view):
+        if request.method == SAFE_METHODS:
+            return True
         else:
-            return [IsAuthenticated()]
-
+            return request.user and request.user.is_authenticated
