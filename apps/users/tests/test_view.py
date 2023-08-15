@@ -29,7 +29,6 @@ class RegisterViewTestCase(APITestCase):
     def test_user_registration(self):
         response = self.client.post(self.url, self.request_data)
         response_data = response.data
-        print(response_data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertListEqual(
             list(response_data.keys()),
