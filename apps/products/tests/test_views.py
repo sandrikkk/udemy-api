@@ -1,51 +1,56 @@
 from django.contrib.auth.hashers import make_password
-from django.test import TestCase
 from rest_framework import status
+from rest_framework.test import APITestCase
 
 from apps.category.models import Category
 from apps.products.models import Product
 from apps.users.models import User
 
 
-class ProductCreationTestCase(TestCase):
+class ProductCreationAPITestCase(APITestCase):
     def setUp(self):
         self.url = "/products/"
-
         self.user = User.objects.create(
             email="test1234@gmail.com", password=make_password("test1234")
         )
         self.client.login(email="test1234@gmail.com", password="test1234")
 
     def test_product_creation(self):
+        # Create a category for the product
         category = Category.objects.create(name="history")
+
+        # Define the data for the product
         data = {
-            "name": "good coursessssdasdssss",
-            "description": "dsfasdfss",
+            "name": "good course",
+            "description": "the best description ever",
             "price": "25.00",
             "category": category.id,
         }
 
+        # Send a POST request to create the product
         response = self.client.post(self.url, data)
-        self.assertEqual(Product.objects.count(), 1)
-        response_data = response.data
+
+        # Assert that the product was created successfully
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertListEqual(
-            list(response_data.keys()),
-            [
-                "id",
-                "created_at",
-                "updated_at",
-                "deleted",
-                "name",
-                "description",
-                "price",
-                "images",
-                "category",
-            ],
-        )
+        self.assertEqual(Product.objects.count(), 1)
+
+        # Assert that the response data contains the expected keys
+        response_data = response.data
+        expected_keys = [
+            "id",
+            "created_at",
+            "updated_at",
+            "deleted",
+            "name",
+            "description",
+            "price",
+            "images",
+            "category",
+        ]
+        self.assertListEqual(list(response_data.keys()), expected_keys)
 
 
-class ProductRetrievalTestCase(TestCase):
+class ProductRetrievalAPITestCase(APITestCase):
     def setUp(self):
         self.user = User.objects.create(
             email="test1234@gmail.com", password=make_password("test1234")
@@ -73,13 +78,19 @@ class ProductRetrievalTestCase(TestCase):
         )
 
     def test_retrieve_product_by_id(self):
+        # Retrieve the product by its ID
         retrieved_product = Product.objects.get(id=self.product1.id)
+
+        # Assert that the retrieved product has the expected attributes
         self.assertEqual(retrieved_product.name, "Product 1")
         self.assertEqual(retrieved_product.description, "Description 1")
         self.assertEqual(retrieved_product.category, self.category)
 
     def test_retrieve_product_by_name(self):
+        # Retrieve the product by its name
         retrieved_product = Product.objects.get(name="Product 2")
+
+        # Assert that the retrieved product has the expected attributes
         self.assertEqual(retrieved_product.name, "Product 2")
         self.assertEqual(retrieved_product.description, "Description 2")
         self.assertEqual(retrieved_product.category, self.category)
