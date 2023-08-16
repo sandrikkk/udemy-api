@@ -13,6 +13,13 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = ["product", "comment", "star", "user"]
 
+    def validate_user(self, user):
+        if not user.is_verified:
+            raise serializers.ValidationError(
+                "In order to leave a review, your profile must first be verified."
+            )
+        return user
+
     def validate(self, attrs):
         attrs = super().validate(attrs)
         product = attrs.get("product")
