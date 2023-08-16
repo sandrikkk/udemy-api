@@ -17,6 +17,8 @@ class OrderAPITestCase(APITestCase):
         self.user = User.objects.create(
             email="test1234@gmail.com", password=make_password("test1234")
         )
+        self.user.is_verified = True
+        self.user.save()
         self.client.login(email="test1234@gmail.com", password="test1234")
         self.category = Category.objects.create(name="Electronics")
         self.product = Product.objects.create(
@@ -29,10 +31,7 @@ class OrderAPITestCase(APITestCase):
     @patch("apps.orders.serializers.send_order_completion_email")
     def test_create_order(self, mock_send_order_completion_email):
         # Define the data for the order
-        data = {
-            "product": self.product.id,
-            "user": self.user,
-        }
+        data = {"product": self.product.id, "user": self.user}
 
         # Send a POST request to create the order
         response = self.client.post(self.url, data)
