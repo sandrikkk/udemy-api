@@ -5,6 +5,7 @@ from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from apps.users.models import User
+from unittest.mock import patch
 
 
 class RegisterViewTestCase(APITestCase):
@@ -26,7 +27,8 @@ class RegisterViewTestCase(APITestCase):
             "is_verified",
         ]
 
-    def test_user_registration(self):
+    @patch("apps.users.views.send_otp_email")
+    def test_user_registration(self, send_otp_email):
         response = self.client.post(self.url, self.request_data)
         response_data = response.data
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -43,6 +45,8 @@ class RegisterViewTestCase(APITestCase):
             response_data.get("is_verified"), User.objects.last().is_verified
         )
         self.assertEqual(response_data.get("id"), User.objects.last().id)
+
+        send_otp_email.delay.assert_called_once_with(self.request_data.get("email"))
 
     def test_user_registration_without_data(self):
         response = self.client.post(self.url)
