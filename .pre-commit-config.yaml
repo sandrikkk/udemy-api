@@ -25,16 +25,8 @@ repos:
               'pydocstyle>=5.0.0',
           ]
           exclude: ^tests/test_cases/no_closing_bracket\.py$
-#  - repo: https://github.com/pycqa/isort
-#    rev: 5.12.0
-#    hooks:
-#      - id: isort
-#        name: isort (python)
-#  - repo: local
-#    hooks:
-#      - id: django-test
-#        name: django-test
-#        entry: docker-compose run backend python manage.py test
-#        always_run: true
-#        pass_filenames: false
-#        language: system
+  - repo: https://github.com/pycqa/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        name: isort (python)
