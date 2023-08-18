@@ -1,4 +1,6 @@
 exclude: '.*migrations/.*'
+default_stages: [commit, push]
+fail_fast: false
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
@@ -22,6 +24,7 @@ repos:
               'flake8-bugbear',
               'flake8-comprehensions',
               'flake8-implicit-str-concat',
+              'flake8-simplify',
               'pydocstyle>=5.0.0',
           ]
           exclude: ^tests/test_cases/no_closing_bracket\.py$
