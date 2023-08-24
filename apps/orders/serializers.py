@@ -1,5 +1,3 @@
-import json
-
 from rest_framework import serializers
 
 from apps.base.defaults import ProductDefault
@@ -13,7 +11,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ["user", "product", "status", "created_at", "updated_at"]
+        fields = ["id", "user", "product", "status", "created_at", "updated_at"]
         validators = [
             serializers.UniqueTogetherValidator(
                 queryset=Order.objects.all(),
@@ -29,7 +27,6 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data["id"] = instance.id
         data["user"] = self.context["request"].user.id
         data["product"] = instance.product.name
         data["status"] = instance.status.name
