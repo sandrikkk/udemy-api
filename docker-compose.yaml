@@ -45,5 +45,6 @@
         - redis
       env_file:
         - .env
+      entrypoint: ""
   volumes:
     pgdata:
