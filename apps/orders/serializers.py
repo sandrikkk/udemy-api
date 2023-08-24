@@ -1,8 +1,9 @@
+import json
+
 from rest_framework import serializers
 
 from apps.base.defaults import ProductDefault
 from apps.orders.models import Order, Status
-from apps.orders.tasks import send_order_completion_email
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -13,32 +14,23 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ["user", "product", "status", "created_at", "updated_at"]
+        validators = [
+            serializers.UniqueTogetherValidator(
+                queryset=Order.objects.all(),
+                fields=("product", "user"),
+                message="You have already made an order for this product.",
+            )
+        ]
 
     def validate_user(self, user):
         if not user.is_verified:
-            raise serializers.ValidationError(
-                "In order to leave a review, your profile must first be verified."
-            )
+            raise serializers.ValidationError("In order to make an order, your profile must first be verified.")
         return user
-
-    def validate(self, attrs):
-        attrs = super().validate(attrs)
-        user = self.context["request"].user
-        product = attrs.get("product")
-        attrs["status"] = Status.SUCCEED
-        if Order.objects.filter(
-            user=user, product=product, status=Status.SUCCEED
-        ).exists():
-            raise serializers.ValidationError(
-                "You have already made a order for this product."
-            )
-        user_email = user.email
-        send_order_completion_email.delay(user_email)
-
-        return attrs
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
+        data["id"] = instance.id
         data["user"] = self.context["request"].user.id
         data["product"] = instance.product.name
+        data["status"] = instance.status.name
         return data
