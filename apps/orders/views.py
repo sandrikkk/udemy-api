@@ -4,7 +4,6 @@ from rest_framework.permissions import IsAuthenticated
 from apps.orders.models import Order, Status
 from apps.orders.serializers import OrderSerializer
 from apps.orders.tasks import send_order_completion_email
-from apps.products.models import Product
 
 
 class OrderAPIView(CreateAPIView):

@@ -7,7 +7,6 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from apps.users.models import User
 from apps.users.serializer import UserSerializer, VerifyAccountSerializer
-
 from apps.users.tasks import send_otp_email
 
 
@@ -31,7 +30,7 @@ class RegisterUser(APIView):
         serializer.save()
 
     def _send_otp_email(self, serializer):
-        email = serializer.data["email"]
+        email = serializer.data.get("email")
         send_otp_email.delay(email)
 
     def _response(self, data, status_code):
@@ -47,16 +46,14 @@ class VerifyOTP(APIView):
         serializer = self.serializer_class(data=data)
         serializer.is_valid(raise_exception=True)
 
-        email = serializer.data["email"]
+        email = serializer.data.get("email")
         user = User.objects.filter(email=email).first()
 
         user.is_verified = True
         user.save()
 
         return Response(
-            data={
-                "message": "you have successfully completed the verification process"
-            },
+            data={"message": "you have successfully completed the verification process"},
             status=status.HTTP_200_OK,
         )
 
