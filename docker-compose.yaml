@@ -45,6 +45,6 @@
         - redis
       env_file:
         - .env
-      entrypoint: ""
+      entrypoint: ['scripts/docker-entrypoint.sh']
   volumes:
     pgdata:
